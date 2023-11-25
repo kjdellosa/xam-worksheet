@@ -1,0 +1,1 @@
+type User = import('zod').infer<typeof import('../models/user')['userSchema']>
