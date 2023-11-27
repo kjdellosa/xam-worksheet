@@ -1,15 +1,41 @@
 import './App.css'
-import { BrowserRouter } from 'react-router-dom'
-import Routes from './Routes'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Dashboard, Login } from '@components'
+import { PrivateRoutes } from './Routes'
 import { AuthProvider } from '@hooks/useAuth'
+import { userListLoader } from '@hooks/useUserList'
+import { userListAction } from '@hooks/useUserListMutations'
 
 function App() {
+  const queryClient = new QueryClient()
+
+  const routes = createBrowserRouter([
+    {
+      path: '/',
+      element: <Login />
+    },
+    {
+      element: <PrivateRoutes />,
+      children: [
+        {
+          path: '/dashboard',
+          element: <Dashboard />,
+          loader: userListLoader(queryClient),
+          action: userListAction(queryClient)
+        }
+      ]
+    }
+  ])
+
   return (
-    <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Routes />
+
+        <RouterProvider router={routes} />
+
       </AuthProvider>
-    </BrowserRouter>
+    </QueryClientProvider>
   )
 }
 

@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useState, useContext, useEffect } from 'react'
 import useLocalStorage from './useLocalStorage';
+import { redirect } from 'react-router-dom';
 import { users as stubData } from '../tests/users.data'
 
 type Props = {
@@ -9,7 +10,8 @@ type Props = {
 type IAuthContext = {
   authenticated: boolean;
   authenticate: (newState: User) => boolean,
-  logout: () => void
+  logout: () => void,
+  user: User | null
 }
 
 interface Auth {
@@ -20,8 +22,9 @@ interface Auth {
 
 const initialValue = {
   authenticated: false,
-  authenticate: () => { return false },
-  logout: () => { }
+  authenticate: () => false,
+  logout: () => { },
+  user: null
 }
 
 const AuthContext = createContext<IAuthContext>(initialValue)
@@ -41,7 +44,6 @@ const AuthProvider = ({ children }: Props) => {
   const authenticate = (data: Auth) => {
     const { branchId, userName, password } = data
 
-
     const foundUser = users.find((u: User) => {
       return u.password === password &&
         u.branchId === branchId &&
@@ -53,22 +55,24 @@ const AuthProvider = ({ children }: Props) => {
       setAuthenticated(true)
       return true
     } else {
+      setAuthenticated(false)
       return false
     }
   }
 
   const logout = () => {
+    setAuthenticated(false)
     removeAuthValue()
+    redirect('/')
   }
 
   useEffect(() => {
-    console.log(authValue)
-    setUsers(stubData)
+    if (!users) setUsers(stubData)
     if (authValue) setAuthenticated(true)
   }, [])
 
   return (
-    <AuthContext.Provider value={{ authenticated, authenticate, logout }}>
+    <AuthContext.Provider value={{ authenticated, authenticate, logout, user: authValue }}>
       {children}
     </AuthContext.Provider>
   )

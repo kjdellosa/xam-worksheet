@@ -32,16 +32,15 @@ export const Login: React.FC = () => {
       <div className='text-2xl font-bold text-gray-900'>
         Login
       </div>
-
       <Card>
         <Form form={form} name='Login Form' layout='vertical' onChange={() => setLoginError(false)}>
-          <Form.Item name='branchId' rules={[{ required: true, message: 'Branch ID is required' }]}>
+          <Form.Item label='Branch ID' name='branchId' rules={[{ required: true, message: 'Branch ID is required' }]}>
             <InputNumber placeholder='Branch ID' style={{ width: '100% ' }} />
           </Form.Item>
-          <Form.Item name='userName' rules={[{ required: true, message: 'Username is required' }]}>
+          <Form.Item label='Username' name='userName' rules={[{ required: true, message: 'Username is required' }]}>
             <Input placeholder='Username' />
           </Form.Item>
-          <Form.Item name='password' rules={[{ required: true, message: 'Password is required' }]}>
+          <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Password is required' }]}>
             <Input.Password placeholder='Password' />
           </Form.Item>
           <Button onClick={() => handleLogin()} type='primary' className='w-[100%]'>Login</Button>
