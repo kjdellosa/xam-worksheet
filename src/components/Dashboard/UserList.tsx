@@ -2,10 +2,7 @@ import { Button, Table } from 'antd'
 
 interface UserListProps {
   onDelete: (id: number) => void
-  list: {
-    users: User[]
-    isLoading: boolean
-  }
+  users: User[]
 }
 
 interface UserTableColumnProps {
@@ -20,9 +17,9 @@ const makeColumns = ({ onDelete }: UserTableColumnProps) => {
     },
     {
       title: 'Name',
-      render: (item: User) => {
+      render: (item: User, key: number) => {
         return (
-          <p>{item.firstName} {item.middleName[0]}. {item.lastName}</p>
+          <p key={key}>{item.firstName} {item.middleName[0]}. {item.lastName}</p>
         )
       }
     },
@@ -42,13 +39,13 @@ const makeColumns = ({ onDelete }: UserTableColumnProps) => {
 }
 
 export const UserList: React.FC<UserListProps> = ({
-  list,
+  users,
   onDelete
 }) => {
   return (
     <Table
       columns={makeColumns({ onDelete })}
-      dataSource={list.users}
+      dataSource={users}
       bordered
     />
   )

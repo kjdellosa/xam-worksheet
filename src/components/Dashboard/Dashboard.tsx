@@ -8,7 +8,7 @@ import { UserList } from './UserList'
 export const Dashboard: React.FC = () => {
   const { user, logout } = useAuth()
   const { form } = useUserForm()
-  const { list } = useUserList()
+  const { users } = useUserList()
 
   return (
     <div className='m-5 flex-grow h-[80vh] items-center justify-center space-y-4'>
@@ -24,7 +24,7 @@ export const Dashboard: React.FC = () => {
             </Col>
             <Col span="18" className='p-5'>
               <UserList
-                list={list}
+                users={users}
                 onDelete={form.onDelete}
               />
             </Col>

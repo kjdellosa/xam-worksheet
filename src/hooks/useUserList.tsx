@@ -1,39 +1,87 @@
-import { useQuery, QueryClient } from '@tanstack/react-query'
+import React, { createContext, useContext, useEffect, useReducer } from 'react'
 import useLocalStorage from './useLocalStorage'
+import { message } from 'antd'
 
-interface UserList {
-  list: {
-    users: User[]
-    isLoading: boolean
+interface UserListContextType {
+  users: User[]
+  addUser: (newUser: User) => void
+  deleteUser: (id: number) => void
+}
+
+export const UserListContext = createContext<UserListContextType | null>(null)
+
+const SET_STATE = 'SET_STATE'
+
+type Action = {
+  type: string
+  payload: { field: string, value: any }
+}
+
+const reducer = (state: Record<string, any> = {}, { type, payload }: Action) => {
+  switch (type) {
+    case SET_STATE: {
+      const { field, value } = payload
+      return {
+        ...state,
+        [field]: value,
+      }
+    }
+    default:
+      throw new Error('Unrecognized Action')
   }
 }
 
-function getUsers() {
-  const { value } = useLocalStorage('users')
+const UserListProvider = ({ children }) => {
+  const [values, dispatch] = useReducer(reducer, {
+    users: [],
+  })
 
-  return value
-}
+  const { value: localstorageUsers, setValue: setLocalStorageUsers } = useLocalStorage('users')
 
-const userListQuery = () => ({
-  queryKey: ['users'],
-  queryFn: getUsers
-})
+  useEffect(() => {
+    setUsers(localstorageUsers)
+  }, [])
 
-export const userListLoader = (queryClient: QueryClient) => async () => {
-  const query = userListQuery()
+  const { users } = values
+
+  const setUsers = (val: User[]) => {
+    setLocalStorageUsers(val)
+    dispatch({
+      type: SET_STATE,
+      payload: { field: 'users', value: val },
+    })
+  }
+
+  const addUser = (newUser: User) => {
+    setUsers([...users, newUser])
+    message.success('User added successfully.')
+  }
+
+  const deleteUser = (id: number) => {
+    const updatedData = users.filter((v: User) => v.branchId !== id)
+    setUsers(updatedData)
+    message.success('User deleted successfully.')
+  }
+
   return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
+    <UserListContext.Provider
+      value={{
+        users,
+        addUser,
+        deleteUser,
+      }}
+    >
+      {children}
+    </UserListContext.Provider>
   )
 }
 
-export const useUserList = (): UserList => {
-  const { data: users = [], isLoading } = useQuery(userListQuery())
+export default UserListProvider
 
-  return {
-    list: {
-      users,
-      isLoading
-    }
+export const useUserList = () => {
+  const contextValue = useContext(UserListContext)
+  if (!contextValue) {
+    throw new Error('useUserList must be used within a UserListProvider')
   }
+  return contextValue
 }

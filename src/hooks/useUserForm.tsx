@@ -1,10 +1,9 @@
 import { Form } from 'antd'
-
-import { useUserListMutations } from './useUserListMutations'
+import { useUserList } from './useUserList'
 
 export const useUserForm = () => {
   const [form] = Form.useForm<User>()
-  const { addUser, deleteUser, isLoading } = useUserListMutations()
+  const { addUser, deleteUser } = useUserList()
 
   const onCancel = async () => {
     form.resetFields()
@@ -29,7 +28,7 @@ export const useUserForm = () => {
   return {
     form: {
       instance: form,
-      isLoading,
+      isLoading: false,
       onDelete,
       onSubmit,
       onCancel
