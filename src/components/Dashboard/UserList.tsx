@@ -1,4 +1,5 @@
 import { Button, Table } from 'antd'
+import type { ColumnsType } from 'antd/es/table';
 
 interface UserListProps {
   onDelete: (id: number) => void
@@ -9,17 +10,21 @@ interface UserTableColumnProps {
   onDelete: (id: number) => void
 }
 
-const makeColumns = ({ onDelete }: UserTableColumnProps) => {
+const makeColumns = ({ onDelete }: UserTableColumnProps): ColumnsType<User> => {
   return [
+    {
+      title: '#',
+      render: (item, record, index) => <p>{index + 1}</p>
+    },
     {
       title: 'Username',
       dataIndex: 'userName',
     },
     {
       title: 'Name',
-      render: (item: User, key: number) => {
+      render: (item: User) => {
         return (
-          <p key={key}>{item.firstName} {item.middleName[0]}. {item.lastName}</p>
+          <p>{item.firstName} {item.middleName[0]}. {item.lastName}</p>
         )
       }
     },
@@ -44,6 +49,7 @@ export const UserList: React.FC<UserListProps> = ({
 }) => {
   return (
     <Table
+      rowKey={record => record.branchId}
       columns={makeColumns({ onDelete })}
       dataSource={users}
       bordered

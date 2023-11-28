@@ -5,7 +5,12 @@ import { message } from 'antd'
 interface UserListContextType {
   users: User[]
   addUser: (newUser: User) => void
-  deleteUser: (id: number) => void
+  deleteUser: (id: number) => void,
+  setUsers: (users: User[]) => void
+}
+
+interface UserListProviderProps {
+  children: React.ReactNode
 }
 
 export const UserListContext = createContext<UserListContextType | null>(null)
@@ -31,15 +36,15 @@ const reducer = (state: Record<string, any> = {}, { type, payload }: Action) => 
   }
 }
 
-const UserListProvider = ({ children }) => {
+const UserListProvider: React.FC<UserListProviderProps> = ({ children }) => {
   const [values, dispatch] = useReducer(reducer, {
     users: [],
   })
 
-  const { value: localstorageUsers, setValue: setLocalStorageUsers } = useLocalStorage('users')
+  const { value: localStorageUsers, setValue: setLocalStorageUsers } = useLocalStorage('users')
 
   useEffect(() => {
-    setUsers(localstorageUsers)
+    setUsers(localStorageUsers)
   }, [])
 
   const { users } = values
@@ -69,6 +74,7 @@ const UserListProvider = ({ children }) => {
         users,
         addUser,
         deleteUser,
+        setUsers
       }}
     >
       {children}

@@ -2,6 +2,7 @@ import { createContext, ReactNode, useState, useContext, useEffect } from 'react
 import useLocalStorage from './useLocalStorage';
 import { redirect } from 'react-router-dom';
 import { users as stubData } from '../tests/users.data'
+import { useUserList } from './useUserList';
 
 type Props = {
   children?: ReactNode;
@@ -36,14 +37,16 @@ const AuthProvider = ({ children }: Props) => {
     removeValue: removeAuthValue
   } = useLocalStorage('auth')
 
-  const { value: users, setValue: setUsers } = useLocalStorage('users')
+  const { value: localStorageUsers } = useLocalStorage('')
+  const { users, setUsers } = useUserList()
 
   const [authenticated, setAuthenticated] = useState(initialValue.authenticated)
 
-  // Check if user exists
+  // Check if user exists. 
   const authenticate = (data: Auth) => {
     const { branchId, userName, password } = data
 
+    // Mock workflow for authenticating a user
     const foundUser = users.find((u: User) => {
       return u.password === password &&
         u.branchId === branchId &&
@@ -67,7 +70,7 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   useEffect(() => {
-    if (!users) setUsers(stubData)
+    if (!localStorageUsers) setUsers(stubData)
     if (authValue) setAuthenticated(true)
   }, [])
 

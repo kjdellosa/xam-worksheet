@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const useLocalStorage = (keyName: string) => {
-  const [value, setValue] = useState(() => {
+  const [value, _setValue] = useState(() => {
     const storedValue = localStorage.getItem(keyName)
 
     try {
@@ -12,10 +12,10 @@ const useLocalStorage = (keyName: string) => {
     }
   })
 
-  useEffect(() => {
-    const stringifiedValue = JSON.stringify(value)
-    localStorage.setItem(keyName, stringifiedValue)
-  }, [value])
+  const setValue = (newValue: object) => {
+    _setValue(newValue)
+    localStorage.setItem(keyName, JSON.stringify(newValue))
+  }
 
   const removeValue = () => {
     localStorage.removeItem(keyName)

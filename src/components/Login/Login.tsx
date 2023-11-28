@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
           <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Password is required' }]}>
             <Input.Password placeholder='Password' />
           </Form.Item>
-          <Button onClick={() => handleLogin()} type='primary' className='w-[100%]'>Login</Button>
+          <Button onClick={() => handleLogin()} className='w-[100%]'>Login</Button>
           {loginError && <p className='text-red-500 pt-5'>User not found.</p>}
         </Form>
       </Card>

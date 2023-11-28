@@ -23,11 +23,11 @@ function App() {
   ])
 
   return (
-    <AuthProvider>
-      <UserListProvider>
+    <UserListProvider>
+      <AuthProvider>
         <RouterProvider router={routes} />
-      </UserListProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </UserListProvider>
   )
 }
 
