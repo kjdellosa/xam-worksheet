@@ -34,16 +34,36 @@ export const Login: React.FC = () => {
       </div>
       <Card>
         <Form form={form} name='Login Form' layout='vertical' onChange={() => setLoginError(false)}>
-          <Form.Item label='Branch ID' name='branchId' rules={[{ required: true, message: 'Branch ID is required' }]}>
+          <Form.Item
+            label='Branch ID'
+            name='branchId'
+            id='branchId'
+            rules={[{ required: true, message: 'Branch ID is required' }]}
+          >
             <InputNumber placeholder='Branch ID' style={{ width: '100% ' }} />
           </Form.Item>
-          <Form.Item label='Username' name='userName' rules={[{ required: true, message: 'Username is required' }]}>
+          <Form.Item
+            label='Username'
+            name='userName'
+            id='userName'
+            rules={[{ required: true, message: 'Username is required' }]}
+          >
             <Input placeholder='Username' />
           </Form.Item>
-          <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Password is required' }]}>
+          <Form.Item
+            label='Password'
+            name='password'
+            id='password'
+            rules={[{ required: true, message: 'Password is required' }]}
+          >
             <Input.Password placeholder='Password' />
           </Form.Item>
-          <Button onClick={() => handleLogin()} className='w-[100%]'>Login</Button>
+          <Button
+            id='login-button'
+            onClick={() => handleLogin()}
+            className='w-[100%]'>
+            Login
+          </Button>
           {loginError && <p className='text-red-500 pt-5'>User not found.</p>}
         </Form>
       </Card>

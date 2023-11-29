@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useState, useContext, useEffect } from 'react'
 import useLocalStorage from './useLocalStorage';
 import { redirect } from 'react-router-dom';
-import { users as stubData } from '../tests/users.data'
+import { users as stubData } from '../../tests/users.data'
 import { useUserList } from './useUserList';
 
 type Props = {
